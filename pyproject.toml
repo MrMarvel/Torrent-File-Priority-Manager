@@ -1,0 +1,18 @@
+[project]
+name = "torrentfileprioritymanager"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "MrMarvel", email = "24212110+MrMarvel@users.noreply.github.com" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "requests~=2.0",
+]
+
+[project.scripts]
+torrentfileprioritymanager = "torrentfileprioritymanager:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
