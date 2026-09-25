@@ -2,6 +2,7 @@
 name = "torrentfileprioritymanager"
 version = "0.1.0"
 description = "Add your description here"
+readme = "README.md"
 authors = [
     { name = "MrMarvel", email = "24212110+MrMarvel@users.noreply.github.com" }
 ]
