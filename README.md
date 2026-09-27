@@ -2,7 +2,8 @@
 
 ## Usage
 
-This tool allows to automate setting files priority with logic:
+This tool allows to automate setting files priority for qBittorent.
+Algorithm logic:
 
 1. In sorted list of files:
 
