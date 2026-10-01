@@ -1,7 +1,7 @@
 [project]
-name = "torrentfileprioritymanager"
+name = "torrent-file-priority-manager"
 version = "0.1.0"
-description = "Add your description here"
+description = "Torrent file priority manager"
 readme = "README.md"
 authors = [
     { name = "MrMarvel", email = "24212110+MrMarvel@users.noreply.github.com" }
@@ -13,6 +13,11 @@ dependencies = [
 
 [project.scripts]
 torrentfileprioritymanager = "torrentfileprioritymanager:main"
+torrent-file-priority-manager = "torrentfileprioritymanager:main"
+torrent_file_priority_manager = "torrentfileprioritymanager:main"
+
+[tool.uv.build-backend]
+module-name = "torrentfileprioritymanager"
 
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]
