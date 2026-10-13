@@ -80,8 +80,9 @@ def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = Tru
         return
     
     # Целевые приоритеты для первых двух незагруженных
-    targets = {}
-    targets[pending[0]["index"]] = 7
+    targets = {
+        pending[0]["index"]: 7
+    }
     if len(pending) > 1:
         targets[pending[1]["index"]] = 6
     
