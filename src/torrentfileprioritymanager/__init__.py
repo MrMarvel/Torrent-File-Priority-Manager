@@ -39,8 +39,8 @@ class QBittorrent:
             timeout=10,
         )
         r.raise_for_status()
-        if r.text.strip() != "Ok.":
-            raise RuntimeError(f"Не удалось залогиниться: {r.text!r}")
+        if r.status_code not in [200, 204]:
+            raise RuntimeError(f"Не удалось залогиниться. Статус: ({r.status_code}). Текст: {r.text!r}")
         return self
     
     def files(self, torrent_hash: str) -> list[dict]:
