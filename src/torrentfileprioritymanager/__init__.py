@@ -21,7 +21,7 @@ import requests
 
 def natural_key(name: str):
     return [int(p) if p.isdigit() else p.lower()
-            for p in re.split(r"\d+", name)]
+            for p in re.split(r"(\d+)", name)]
 
 
 class QBittorrent:
