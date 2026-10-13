@@ -31,7 +31,7 @@ class QBittorrent:
         self.s.headers.update({"Referer": self.base})
         self.username = username
         self.password = password
-
+    
     def login(self):
         r = self.s.post(
             f"{self.base}/api/v2/auth/login",
@@ -42,7 +42,7 @@ class QBittorrent:
         if r.text.strip() != "Ok.":
             raise RuntimeError(f"Не удалось залогиниться: {r.text!r}")
         return self
-
+    
     def files(self, torrent_hash: str) -> list[dict]:
         r = self.s.get(
             f"{self.base}/api/v2/torrents/files",
@@ -51,7 +51,7 @@ class QBittorrent:
         )
         r.raise_for_status()
         return r.json()
-
+    
     def set_file_priority(self, torrent_hash: str, file_id: int, priority: int):
         r = self.s.post(
             f"{self.base}/api/v2/torrents/filePrio",
@@ -65,35 +65,35 @@ def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = Tru
     files = qb.files(torrent_hash)
     if not files:
         return
-
+    
     # Только незагруженные, отсортированные по имени
     pending = sorted(
         (f for f in files if f["progress"] < 1.0),
         key=lambda f: natural_key(f["name"]),
     )
-
+    
     if verbose:
         print(f"[{time.strftime('%H:%M:%S')}] "
               f"всего файлов: {len(files)}, не завершено: {len(pending)}")
-
+    
     if not pending:
         return
-
+    
     # Целевые приоритеты для первых двух незагруженных
     targets = {}
     targets[pending[0]["index"]] = 7
     if len(pending) > 1:
         targets[pending[1]["index"]] = 6
-
+    
     # Всем остальным незагруженным — Normal
     for f in pending[2:]:
         targets[f["index"]] = 1
-
+    
     if verbose:
         print(f"  Max (7): {pending[0]['name']}")
         if len(pending) > 1:
             print(f"  High(6): {pending[1]['name']}")
-
+    
     # Применяем только если отличается (чтоб не спамить API)
     for f in pending:
         idx = f["index"]
@@ -116,10 +116,10 @@ def main():
     p.add_argument("--once", action="store_true", help="Один раз и выход")
     p.add_argument("-q", "--quiet", action="store_true")
     args = p.parse_args()
-
+    
     qb = QBittorrent(args.url, args.user, args.password).login()
     print(f"Залогинились в {args.url}, торрент {args.hash}")
-
+    
     try:
         while True:
             try:
@@ -132,7 +132,7 @@ def main():
                     print(f"HTTP ошибка: {e}")
             except Exception as e:
                 print(f"Ошибка: {e}", file=sys.stderr)
-
+            
             if args.once:
                 break
             time.sleep(args.interval)
