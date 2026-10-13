@@ -61,10 +61,10 @@ class QBittorrent:
         r.raise_for_status()
 
 
-def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = True):
+def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = True) -> bool:
     files = qb.files(torrent_hash)
     if not files:
-        return
+        return False
     
     # Только незагруженные, отсортированные по имени
     pending = sorted(
@@ -77,7 +77,7 @@ def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = Tru
               f"всего файлов: {len(files)}, не завершено: {len(pending)}")
     
     if not pending:
-        return
+        return False
     
     # Целевые приоритеты для первых двух незагруженных
     targets = {
@@ -103,6 +103,7 @@ def rebalance_priorities(qb: QBittorrent, torrent_hash: str, verbose: bool = Tru
             qb.set_file_priority(torrent_hash, idx, target)
             if verbose:
                 print(f"     set prio {target} → [{idx}] {f['name']}")
+    return True
 
 
 def main():
@@ -124,7 +125,9 @@ def main():
     try:
         while True:
             try:
-                rebalance_priorities(qb, args.hash, verbose=not args.quiet)
+                is_torrent_downloading = rebalance_priorities(qb, args.hash, verbose=not args.quiet)
+                if not is_torrent_downloading:
+                    break
             except requests.HTTPError as e:
                 if e.response is not None and e.response.status_code == 403:
                     print("Сессия истекла, перелогин...")
@@ -138,7 +141,8 @@ def main():
                 break
             time.sleep(args.interval)
     except KeyboardInterrupt:
-        print("\nОстановлено.")
+        print()
+    print("Остановлено.")
 
 
 if __name__ == "__main__":
