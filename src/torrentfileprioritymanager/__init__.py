@@ -5,8 +5,8 @@ auto_prio.py — авто-приоритеты файлов в qBittorrent.
   * Берём список файлов торрента.
   * Оставляем только незагруженные (progress < 1.0).
   * Сортируем их «естественно» (file2 < file10).
-  * Первому  -> приоритет 7 (Maximal).
-  * Второму  -> приоритет 6 (High).
+  * Первому -> приоритет 7 (Maximal).
+  * Второму -> приоритет 6 (High).
   * Остальным незагруженным -> приоритет 1 (Normal).
   * Скачанные файлы НЕ трогаем.
   * Раз в N секунд повторяем.
@@ -21,7 +21,7 @@ import requests
 
 def natural_key(name: str):
     return [int(p) if p.isdigit() else p.lower()
-            for p in re.split(r"(\d+)", name)]
+            for p in re.split(r"\d+", name)]
 
 
 class QBittorrent:
